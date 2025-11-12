@@ -44,11 +44,6 @@ dependencies:
   
   # Storage
   shared_preferences: ^2.0.0
-  firebase_core: ^2.0.0
-  cloud_firestore: ^4.0.0
-  
-  # Security
-  local_auth: ^2.0.0
   
   # Utils
   intl: any

@@ -1,13 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 import '../providers/theme_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  void _showEditNameDialog(BuildContext context) {
+    final userProvider = context.read<UserProvider>();
+    final nameController = TextEditingController(text: userProvider.userName);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: context.theme.colors.background,
+        title: Text(
+          'Edit Nama',
+          style: context.theme.typography.lg.copyWith(
+            fontWeight: FontWeight.w600,
+            color: context.theme.colors.foreground,
+          ),
+        ),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          style: TextStyle(color: context.theme.colors.foreground),
+          decoration: InputDecoration(
+            labelText: 'Nama',
+            labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: context.theme.colors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: context.theme.colors.primary, width: 2),
+            ),
+          ),
+          textCapitalization: TextCapitalization.words,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Batal',
+              style: TextStyle(color: context.theme.colors.mutedForeground),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                context.read<UserProvider>().updateUserName(nameController.text.trim());
+                Navigator.pop(context);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: context.theme.colors.primary,
+              foregroundColor: context.theme.colors.primaryForeground,
+            ),
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
     final themeProvider = context.watch<ThemeProvider>();
 
     return Scaffold(
@@ -33,25 +92,33 @@ class ProfileScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: context.theme.colors.muted,
-                      child: Icon(
-                        Icons.person,
-                        size: 50,
-                        color: context.theme.colors.foreground,
+                      child: Text(
+                        userProvider.userName.isNotEmpty
+                            ? userProvider.userName[0].toUpperCase()
+                            : '?',
+                        style: context.theme.typography.xl4.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.theme.colors.foreground,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Pengguna DompetKuy',
+                      userProvider.userName,
                       style: context.theme.typography.xl.copyWith(
                         fontWeight: FontWeight.w600,
                         color: context.theme.colors.foreground,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'user@dompetkuy.com',
-                      style: context.theme.typography.sm.copyWith(
-                        color: context.theme.colors.mutedForeground,
+                    TextButton(
+                      onPressed: () => _showEditNameDialog(context),
+                      child: Text(
+                        'Edit Nama',
+                        style: context.theme.typography.sm.copyWith(
+                          color: context.theme.colors.mutedForeground,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                   ],
@@ -89,62 +156,7 @@ class ProfileScreen extends StatelessWidget {
                         activeColor: context.theme.colors.primary,
                       ),
                     ),
-                    Divider(
-                      height: 1,
-                      color: context.theme.colors.border,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.lock_outline,
-                        color: context.theme.colors.foreground,
-                      ),
-                      title: Text(
-                        'Keamanan',
-                        style: context.theme.typography.base.copyWith(
-                          color: context.theme.colors.foreground,
-                        ),
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: context.theme.colors.mutedForeground,
-                      ),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Fitur keamanan akan segera hadir'),
-                            backgroundColor: context.theme.colors.muted,
-                          ),
-                        );
-                      },
-                    ),
-                    Divider(
-                      height: 1,
-                      color: context.theme.colors.border,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.notifications_outlined,
-                        color: context.theme.colors.foreground,
-                      ),
-                      title: Text(
-                        'Notifikasi',
-                        style: context.theme.typography.base.copyWith(
-                          color: context.theme.colors.foreground,
-                        ),
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: context.theme.colors.mutedForeground,
-                      ),
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Pengaturan notifikasi akan segera hadir'),
-                            backgroundColor: context.theme.colors.muted,
-                          ),
-                        );
-                      },
-                    ),
+
                   ],
                 ),
               ),

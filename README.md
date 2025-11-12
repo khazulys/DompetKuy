@@ -2,14 +2,21 @@
 
 Aplikasi pengelola keuangan pribadi dengan tampilan hitam-putih (black & white) yang modern, profesional, dan minimalis.
 
+**✨ 100% Offline - Semua data disimpan lokal di device Anda!**
+
 ## 🎨 Fitur Utama
 
-### 1. Dashboard Ringkasan Keuangan
+### 1. Onboarding Personalisasi
+- Sheet welcome pertama kali buka aplikasi
+- Input nama pengguna untuk personalisasi
+- Welcome message "Welcome, <nama> 👋" di dashboard
+
+### 2. Dashboard Ringkasan Keuangan
 - Menampilkan total saldo, pemasukan, dan pengeluaran bulan ini
 - Visualisasi grafik pengeluaran per kategori dengan tone grayscale
 - Pratinjau target tabungan aktif
 
-### 2. Manajemen Transaksi
+### 3. Manajemen Transaksi
 - Tambah, edit, dan hapus transaksi (pemasukan/pengeluaran)
 - Filter transaksi berdasarkan kategori
 - Kategori yang tersedia:
@@ -23,14 +30,15 @@ Aplikasi pengelola keuangan pribadi dengan tampilan hitam-putih (black & white) 
 - Tambah dana ke target tabungan secara berkala
 - Notifikasi visual untuk target yang hampir tercapai
 
-### 4. Statistik & Analisis
+### 5. Statistik & Analisis
 - Grafik lingkaran (pie chart) pengeluaran per kategori
 - Analisis keuangan bulanan
 - Visualisasi monokrom dengan fl_chart
 
-### 5. Pengaturan Profil
+### 6. Pengaturan Profil
+- Menampilkan nama pengguna dengan initial avatar
+- Edit nama pengguna kapan saja
 - Toggle dark/light mode
-- Pengaturan keamanan (untuk implementasi future)
 - Info aplikasi
 
 ## 🛠️ Teknologi
@@ -39,8 +47,7 @@ Aplikasi pengelola keuangan pribadi dengan tampilan hitam-putih (black & white) 
 - **UI Library**: ForUI 0.16.0 (minimalistic black & white design system)
 - **State Management**: Provider 6.0.0
 - **Charts**: FL Chart 0.60.0
-- **Storage**: SharedPreferences (local), Firebase/Cloud Firestore (optional cloud sync)
-- **Security**: Local Auth (biometric & PIN - ready for implementation)
+- **Storage**: SharedPreferences (100% offline, no internet required)
 - **Fonts**: Google Fonts (Inter)
 
 ## 📦 Dependencies
@@ -53,9 +60,6 @@ dependencies:
   provider: ^6.0.0
   fl_chart: ^0.60.0
   shared_preferences: ^2.0.0
-  firebase_core: ^2.0.0
-  cloud_firestore: ^4.0.0
-  local_auth: ^2.0.0
   intl: any
   uuid: ^4.0.0
   google_fonts: ^6.0.0
@@ -107,6 +111,7 @@ lib/
 │   ├── transaction.dart
 │   └── goal.dart
 ├── providers/                # State management
+│   ├── user_provider.dart
 │   ├── transaction_provider.dart
 │   ├── goal_provider.dart
 │   └── theme_provider.dart
@@ -115,7 +120,8 @@ lib/
 │   ├── dashboard_screen.dart
 │   ├── transactions_screen.dart
 │   ├── goals_screen.dart
-│   └── profile_screen.dart
+│   ├── profile_screen.dart
+│   └── onboarding_sheet.dart
 ├── services/                 # Business logic & services
 │   └── storage_service.dart
 ├── utils/                    # Utilities & helpers
@@ -139,22 +145,23 @@ GitHub Actions workflow sudah dikonfigurasi untuk:
 - Build APK release otomatis saat push ke branch `main`
 - Upload artifact APK ke GitHub Actions
 
-## 🔐 Keamanan
+## 🔐 Privasi & Keamanan
 
-Aplikasi mendukung (ready for implementation):
-- PIN code protection
-- Biometric authentication (fingerprint/face recognition)
+- ✅ **100% Offline** - Tidak ada koneksi internet yang dibutuhkan
+- ✅ **Data Lokal** - Semua data disimpan di device Anda sendiri
+- ✅ **No Login Required** - Tidak perlu akun atau registrasi
+- ✅ **Privacy First** - Data Anda, device Anda, kontrol penuh di tangan Anda
 
 ## 📝 TODO / Future Improvements
 
-- [ ] Implementasi Firebase authentication
-- [ ] Sinkronisasi data dengan Cloud Firestore
-- [ ] Implementasi PIN & biometric security
 - [ ] Export data ke CSV/PDF
+- [ ] Import data dari file backup
 - [ ] Reminder/notification untuk target tabungan
 - [ ] Multi-currency support
-- [ ] Backup & restore data
+- [ ] Recurring transactions (transaksi berulang)
+- [ ] Budget planning per kategori
 - [ ] Widgets Android untuk quick add transaction
+- [ ] Dark mode auto (follow system)
 
 ## 🤝 Kontribusi
 

@@ -3,6 +3,7 @@ import 'package:forui/forui.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import '../providers/user_provider.dart';
 import '../providers/transaction_provider.dart';
 import '../providers/goal_provider.dart';
 
@@ -11,6 +12,7 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
     final transactionProvider = context.watch<TransactionProvider>();
     final goalProvider = context.watch<GoalProvider>();
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
@@ -24,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'DompetKuy',
+                'Welcome, ${userProvider.userName} 👋',
                 style: context.theme.typography.xl3.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.theme.colors.foreground,
