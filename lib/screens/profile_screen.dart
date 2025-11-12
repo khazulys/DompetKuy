@@ -153,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
                       trailing: Switch(
                         value: themeProvider.isDarkMode,
                         onChanged: (_) => themeProvider.toggleTheme(),
-                        activeColor: context.theme.colors.primary,
+                        activeTrackColor: context.theme.colors.primary,
                       ),
                     ),
 

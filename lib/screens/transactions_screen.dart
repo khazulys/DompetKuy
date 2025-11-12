@@ -252,7 +252,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<TransactionType>(
-                  value: type,
+                  initialValue: type,
                   decoration: InputDecoration(
                     labelText: 'Tipe',
                     labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
@@ -276,7 +276,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<TransactionCategory>(
-                  value: category,
+                  initialValue: category,
                   decoration: InputDecoration(
                     labelText: 'Kategori',
                     labelStyle: TextStyle(color: context.theme.colors.mutedForeground),
@@ -367,11 +367,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _DetailRow('Jumlah', currencyFormat.format(transaction.amount), context),
-            _DetailRow('Tipe', transaction.type == TransactionType.income ? 'Pemasukan' : 'Pengeluaran', context),
-            _DetailRow('Kategori', _getCategoryName(transaction.category), context),
-            _DetailRow('Tanggal', DateFormat('dd MMMM yyyy', 'id_ID').format(transaction.date), context),
-            if (transaction.note != null) _DetailRow('Catatan', transaction.note!, context),
+            _detailRow('Jumlah', currencyFormat.format(transaction.amount), context),
+            _detailRow('Tipe', transaction.type == TransactionType.income ? 'Pemasukan' : 'Pengeluaran', context),
+            _detailRow('Kategori', _getCategoryName(transaction.category), context),
+            _detailRow('Tanggal', DateFormat('dd MMMM yyyy', 'id_ID').format(transaction.date), context),
+            if (transaction.note != null) _detailRow('Catatan', transaction.note!, context),
           ],
         ),
         actions: [
@@ -397,7 +397,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  Widget _DetailRow(String label, String value, BuildContext context) {
+  Widget _detailRow(String label, String value, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(

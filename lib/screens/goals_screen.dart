@@ -429,12 +429,12 @@ class GoalsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _DetailRow('Target', currencyFormat.format(goal.targetAmount), context),
-            _DetailRow('Terkumpul', currencyFormat.format(goal.currentAmount), context),
-            _DetailRow('Sisa', currencyFormat.format(goal.targetAmount - goal.currentAmount), context),
-            _DetailRow('Progress', '${(goal.progress * 100).toStringAsFixed(1)}%', context),
-            _DetailRow('Tenggat', DateFormat('dd MMMM yyyy', 'id_ID').format(goal.deadline), context),
-            _DetailRow('Hari Tersisa', '${goal.daysLeft} hari', context),
+            _detailRow('Target', currencyFormat.format(goal.targetAmount), context),
+            _detailRow('Terkumpul', currencyFormat.format(goal.currentAmount), context),
+            _detailRow('Sisa', currencyFormat.format(goal.targetAmount - goal.currentAmount), context),
+            _detailRow('Progress', '${(goal.progress * 100).toStringAsFixed(1)}%', context),
+            _detailRow('Tenggat', DateFormat('dd MMMM yyyy', 'id_ID').format(goal.deadline), context),
+            _detailRow('Hari Tersisa', '${goal.daysLeft} hari', context),
             if (!goal.isCompleted) ...[
               const SizedBox(height: 16),
               TextField(
@@ -491,7 +491,7 @@ class GoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _DetailRow(String label, String value, BuildContext context) {
+  Widget _detailRow(String label, String value, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
