@@ -41,10 +41,30 @@ class TransactionProvider with ChangeNotifier {
   }
 
   Map<TransactionCategory, double> get expenseByCategory {
-    final expenses = _transactions.where((t) => t.type == TransactionType.expense);
+    final now = DateTime.now();
+    final expenses = _transactions.where((t) => 
+        t.type == TransactionType.expense &&
+        t.date.month == now.month &&
+        t.date.year == now.year);
     final Map<TransactionCategory, double> result = {};
     
     for (var transaction in expenses) {
+      result[transaction.category] = 
+          (result[transaction.category] ?? 0) + transaction.amount;
+    }
+    
+    return result;
+  }
+
+  Map<TransactionCategory, double> get incomeByCategory {
+    final now = DateTime.now();
+    final incomes = _transactions.where((t) => 
+        t.type == TransactionType.income &&
+        t.date.month == now.month &&
+        t.date.year == now.year);
+    final Map<TransactionCategory, double> result = {};
+    
+    for (var transaction in incomes) {
       result[transaction.category] = 
           (result[transaction.category] ?? 0) + transaction.amount;
     }
