@@ -227,6 +227,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     DateTime selectedDate = DateTime.now();
 
     final theme = context.theme;
+    final transactionProvider = context.read<TransactionProvider>();
     final typeController = FSelectController<TransactionType>(
       vsync: this,
       value: type,
@@ -239,7 +240,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     final dialog = showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
+        builder: (statefulContext, setState) => AlertDialog(
           backgroundColor: theme.colors.background,
           title: Text(
             'Tambah Transaksi',
@@ -338,7 +339,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: Text(
                 'Batal',
                 style: TextStyle(color: theme.colors.mutedForeground),
@@ -363,12 +364,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       : noteController.text,
                 );
 
-                context.read<TransactionProvider>().addTransaction(transaction);
-                Navigator.pop(context);
+                transactionProvider.addTransaction(transaction);
+                Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.theme.colors.primary,
-                foregroundColor: context.theme.colors.primaryForeground,
+                backgroundColor: theme.colors.primary,
+                foregroundColor: theme.colors.primaryForeground,
               ),
               child: const Text('Simpan'),
             ),
@@ -390,6 +391,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       decimalDigits: 0,
     );
     final theme = context.theme;
+    final transactionProvider = context.read<TransactionProvider>();
 
     showDialog(
       context: context,
@@ -407,43 +409,41 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _detailRow(
+              theme,
               'Jumlah',
               currencyFormat.format(transaction.amount),
-              context,
             ),
             _detailRow(
+              theme,
               'Tipe',
               transaction.type == TransactionType.income
                   ? 'Pemasukan'
                   : 'Pengeluaran',
-              context,
             ),
             _detailRow(
+              theme,
               'Kategori',
               _getCategoryName(transaction.category),
-              context,
             ),
             _detailRow(
+              theme,
               'Tanggal',
               DateFormat('dd MMMM yyyy', 'id_ID').format(transaction.date),
-              context,
             ),
             if (transaction.note != null)
-              _detailRow('Catatan', transaction.note!, context),
+              _detailRow(theme, 'Catatan', transaction.note!),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              context.read<TransactionProvider>().deleteTransaction(
-                transaction.id,
-              );
-              Navigator.pop(context);
+              transactionProvider.deleteTransaction(transaction.id);
+              Navigator.pop(dialogContext);
             },
             child: Text('Hapus', style: TextStyle(color: theme.colors.error)),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               'Tutup',
               style: TextStyle(color: theme.colors.mutedForeground),
@@ -454,7 +454,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     );
   }
 
-  Widget _detailRow(String label, String value, BuildContext context) {
+  Widget _detailRow(FThemeData theme, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -464,17 +464,17 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             width: 80,
             child: Text(
               label,
-              style: context.theme.typography.sm.copyWith(
-                color: context.theme.colors.mutedForeground,
+              style: theme.typography.sm.copyWith(
+                color: theme.colors.mutedForeground,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: context.theme.typography.sm.copyWith(
+              style: theme.typography.sm.copyWith(
                 fontWeight: FontWeight.w500,
-                color: context.theme.colors.foreground,
+                color: theme.colors.foreground,
               ),
             ),
           ),

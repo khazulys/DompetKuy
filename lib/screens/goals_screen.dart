@@ -319,11 +319,12 @@ class GoalsScreen extends StatelessWidget {
     DateTime selectedDate = DateTime.now().add(const Duration(days: 30));
 
     final theme = context.theme;
+    final goalProvider = context.read<GoalProvider>();
 
     showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
+        builder: (statefulContext, setState) => AlertDialog(
           backgroundColor: theme.colors.background,
           title: Text(
             'Buat Target Baru',
@@ -395,7 +396,7 @@ class GoalsScreen extends StatelessWidget {
                   ),
                   onTap: () async {
                     final date = await showDatePicker(
-                      context: context,
+                      context: dialogContext,
                       initialDate: selectedDate,
                       firstDate: DateTime.now(),
                       lastDate: DateTime.now().add(const Duration(days: 3650)),
@@ -410,7 +411,7 @@ class GoalsScreen extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: Text(
                 'Batal',
                 style: TextStyle(color: theme.colors.mutedForeground),
@@ -434,12 +435,12 @@ class GoalsScreen extends StatelessWidget {
                   createdAt: DateTime.now(),
                 );
 
-                context.read<GoalProvider>().addGoal(goal);
-                Navigator.pop(context);
+                goalProvider.addGoal(goal);
+                Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.theme.colors.primary,
-                foregroundColor: context.theme.colors.primaryForeground,
+                backgroundColor: theme.colors.primary,
+                foregroundColor: theme.colors.primaryForeground,
               ),
               child: const Text('Simpan'),
             ),
@@ -457,6 +458,7 @@ class GoalsScreen extends StatelessWidget {
       decimalDigits: 0,
     );
     final theme = context.theme;
+    final goalProvider = context.read<GoalProvider>();
 
     showDialog(
       context: context,
@@ -474,31 +476,31 @@ class GoalsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _detailRow(
+              theme,
               'Target',
               currencyFormat.format(goal.targetAmount),
-              context,
             ),
             _detailRow(
+              theme,
               'Terkumpul',
               currencyFormat.format(goal.currentAmount),
-              context,
             ),
             _detailRow(
+              theme,
               'Sisa',
               currencyFormat.format(goal.targetAmount - goal.currentAmount),
-              context,
             ),
             _detailRow(
+              theme,
               'Progress',
               '${(goal.progress * 100).toStringAsFixed(1)}%',
-              context,
             ),
             _detailRow(
+              theme,
               'Tenggat',
               DateFormat('dd MMMM yyyy', 'id_ID').format(goal.deadline),
-              context,
             ),
-            _detailRow('Hari Tersisa', '${goal.daysLeft} hari', context),
+            _detailRow(theme, 'Hari Tersisa', '${goal.daysLeft} hari'),
             if (!goal.isCompleted) ...[
               const SizedBox(height: 16),
               TextField(
@@ -523,9 +525,9 @@ class GoalsScreen extends StatelessWidget {
               onPressed: () {
                 if (amountController.text.isNotEmpty) {
                   final amount = double.parse(amountController.text);
-                  context.read<GoalProvider>().addAmountToGoal(goal.id, amount);
+                  goalProvider.addAmountToGoal(goal.id, amount);
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colors.primary,
@@ -535,16 +537,16 @@ class GoalsScreen extends StatelessWidget {
             ),
           TextButton(
             onPressed: () {
-              context.read<GoalProvider>().deleteGoal(goal.id);
-              Navigator.pop(context);
+              goalProvider.deleteGoal(goal.id);
+              Navigator.pop(dialogContext);
             },
             child: Text('Hapus', style: TextStyle(color: theme.colors.error)),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               'Tutup',
-              style: TextStyle(color: context.theme.colors.mutedForeground),
+              style: TextStyle(color: theme.colors.mutedForeground),
             ),
           ),
         ],
@@ -552,7 +554,7 @@ class GoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailRow(String label, String value, BuildContext context) {
+  Widget _detailRow(FThemeData theme, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -562,17 +564,17 @@ class GoalsScreen extends StatelessWidget {
             width: 100,
             child: Text(
               label,
-              style: context.theme.typography.sm.copyWith(
-                color: context.theme.colors.mutedForeground,
+              style: theme.typography.sm.copyWith(
+                color: theme.colors.mutedForeground,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: context.theme.typography.sm.copyWith(
+              style: theme.typography.sm.copyWith(
                 fontWeight: FontWeight.w500,
-                color: context.theme.colors.foreground,
+                color: theme.colors.foreground,
               ),
             ),
           ),
