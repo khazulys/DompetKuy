@@ -1,133 +1,123 @@
 import 'dart:math';
 
-enum AvatarHairStyle { none, short, wave, bun, buzz }
+enum DiceBearStyle {
+  avataaars,
+  bottts,
+  pixelArt,
+  lorelei,
+  personas,
+  adventurer,
+  bigSmile,
+  micah,
+}
 
-enum AvatarEyeStyle { round, happy, wink }
+extension DiceBearStyleExtension on DiceBearStyle {
+  String get apiName {
+    switch (this) {
+      case DiceBearStyle.avataaars:
+        return 'avataaars';
+      case DiceBearStyle.bottts:
+        return 'bottts';
+      case DiceBearStyle.pixelArt:
+        return 'pixel-art';
+      case DiceBearStyle.lorelei:
+        return 'lorelei';
+      case DiceBearStyle.personas:
+        return 'personas';
+      case DiceBearStyle.adventurer:
+        return 'adventurer';
+      case DiceBearStyle.bigSmile:
+        return 'big-smile';
+      case DiceBearStyle.micah:
+        return 'micah';
+    }
+  }
 
-enum AvatarMouthStyle { smile, grin, surprised }
+  String get displayName {
+    switch (this) {
+      case DiceBearStyle.avataaars:
+        return 'Avataaars';
+      case DiceBearStyle.bottts:
+        return 'Bottts';
+      case DiceBearStyle.pixelArt:
+        return 'Pixel Art';
+      case DiceBearStyle.lorelei:
+        return 'Lorelei';
+      case DiceBearStyle.personas:
+        return 'Personas';
+      case DiceBearStyle.adventurer:
+        return 'Adventurer';
+      case DiceBearStyle.bigSmile:
+        return 'Big Smile';
+      case DiceBearStyle.micah:
+        return 'Micah';
+    }
+  }
+}
 
 class AvatarConfig {
-  static const backgroundPalette = [
-    '#F8B195',
-    '#F67280',
-    '#C06C84',
-    '#6C5B7B',
-    '#355C7D',
-    '#E0FF4F',
-    '#6BE3C5',
-    '#AEC6FF',
-  ];
-
-  static const facePalette = [
-    '#F7D6C5',
-    '#E7BFAA',
-    '#D1997B',
-    '#AD8066',
-    '#7A4F37',
-  ];
-
-  static const hairPalette = [
-    '#2C2A3A',
-    '#5B4636',
-    '#A47C48',
-    '#CC9957',
-    '#E2B964',
-    '#C52F57',
-    '#1A8FE3',
-  ];
-
-  final String backgroundColor;
-  final String faceColor;
-  final String hairColor;
-  final AvatarHairStyle hairStyle;
-  final AvatarEyeStyle eyeStyle;
-  final AvatarMouthStyle mouthStyle;
+  final String seed;
+  final DiceBearStyle style;
 
   const AvatarConfig({
-    required this.backgroundColor,
-    required this.faceColor,
-    required this.hairColor,
-    required this.hairStyle,
-    required this.eyeStyle,
-    required this.mouthStyle,
+    required this.seed,
+    required this.style,
   });
 
+  String get avatarUrl {
+    return 'https://api.dicebear.com/7.x/${style.apiName}/svg?seed=$seed&backgroundColor=transparent';
+  }
+
   AvatarConfig copyWith({
-    String? backgroundColor,
-    String? faceColor,
-    String? hairColor,
-    AvatarHairStyle? hairStyle,
-    AvatarEyeStyle? eyeStyle,
-    AvatarMouthStyle? mouthStyle,
+    String? seed,
+    DiceBearStyle? style,
   }) {
     return AvatarConfig(
-      backgroundColor: backgroundColor ?? this.backgroundColor,
-      faceColor: faceColor ?? this.faceColor,
-      hairColor: hairColor ?? this.hairColor,
-      hairStyle: hairStyle ?? this.hairStyle,
-      eyeStyle: eyeStyle ?? this.eyeStyle,
-      mouthStyle: mouthStyle ?? this.mouthStyle,
+      seed: seed ?? this.seed,
+      style: style ?? this.style,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'backgroundColor': backgroundColor,
-      'faceColor': faceColor,
-      'hairColor': hairColor,
-      'hairStyle': hairStyle.name,
-      'eyeStyle': eyeStyle.name,
-      'mouthStyle': mouthStyle.name,
+      'seed': seed,
+      'style': style.name,
     };
   }
 
   factory AvatarConfig.fromJson(Map<String, dynamic> json) {
     return AvatarConfig(
-      backgroundColor:
-          json['backgroundColor'] as String? ?? backgroundPalette.first,
-      faceColor: json['faceColor'] as String? ?? facePalette.first,
-      hairColor: json['hairColor'] as String? ?? hairPalette.first,
-      hairStyle: AvatarHairStyle.values.firstWhere(
-        (style) => style.name == json['hairStyle'],
-        orElse: () => AvatarHairStyle.short,
-      ),
-      eyeStyle: AvatarEyeStyle.values.firstWhere(
-        (style) => style.name == json['eyeStyle'],
-        orElse: () => AvatarEyeStyle.round,
-      ),
-      mouthStyle: AvatarMouthStyle.values.firstWhere(
-        (style) => style.name == json['mouthStyle'],
-        orElse: () => AvatarMouthStyle.smile,
+      seed: json['seed'] as String? ?? 'default',
+      style: DiceBearStyle.values.firstWhere(
+        (s) => s.name == json['style'],
+        orElse: () => DiceBearStyle.avataaars,
       ),
     );
   }
 
-  static AvatarConfig random([Random? seed]) {
-    final random = seed ?? Random();
-    String pick(List<String> palette) =>
-        palette[random.nextInt(palette.length)];
-
+  static AvatarConfig random([Random? random]) {
+    final rng = random ?? Random();
+    final styles = DiceBearStyle.values;
+    final randomStyle = styles[rng.nextInt(styles.length)];
+    final randomSeed = rng.nextInt(999999).toString();
+    
     return AvatarConfig(
-      backgroundColor: pick(backgroundPalette),
-      faceColor: pick(facePalette),
-      hairColor: pick(hairPalette),
-      hairStyle:
-          AvatarHairStyle.values[random.nextInt(AvatarHairStyle.values.length)],
-      eyeStyle:
-          AvatarEyeStyle.values[random.nextInt(AvatarEyeStyle.values.length)],
-      mouthStyle: AvatarMouthStyle
-          .values[random.nextInt(AvatarMouthStyle.values.length)],
+      seed: randomSeed,
+      style: randomStyle,
     );
   }
 
   static AvatarConfig defaults() {
+    return const AvatarConfig(
+      seed: 'default',
+      style: DiceBearStyle.avataaars,
+    );
+  }
+
+  static AvatarConfig fromName(String name) {
     return AvatarConfig(
-      backgroundColor: backgroundPalette.first,
-      faceColor: facePalette.first,
-      hairColor: hairPalette.first,
-      hairStyle: AvatarHairStyle.short,
-      eyeStyle: AvatarEyeStyle.round,
-      mouthStyle: AvatarMouthStyle.smile,
+      seed: name,
+      style: DiceBearStyle.avataaars,
     );
   }
 }

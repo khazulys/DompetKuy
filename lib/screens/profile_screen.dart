@@ -326,6 +326,7 @@ class ProfileScreen extends StatelessWidget {
     final userProvider = context.read<UserProvider>();
     final theme = context.theme;
     var tempConfig = userProvider.avatarConfig;
+    final seedController = TextEditingController(text: tempConfig.seed);
 
     showModalBottomSheet(
       context: context,
@@ -336,10 +337,10 @@ class ProfileScreen extends StatelessWidget {
       ),
       builder: (sheetContext) {
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (builderContext, setState) {
             return Padding(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+                bottom: MediaQuery.of(builderContext).viewInsets.bottom + 24,
                 top: 24,
                 left: 20,
                 right: 20,
@@ -350,98 +351,120 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(child: AvatarPreview(config: tempConfig, size: 140)),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     Center(
                       child: TextButton.icon(
                         onPressed: () {
+                          final newConfig = AvatarConfig.random();
+                          seedController.text = newConfig.seed;
                           setState(() {
-                            tempConfig = AvatarConfig.random();
+                            tempConfig = newConfig;
                           });
                         },
                         icon: const Icon(Icons.casino_outlined),
-                        label: const Text('Acak'),
+                        label: const Text('Acak Avatar'),
                         style: TextButton.styleFrom(
                           foregroundColor: theme.colors.primary,
                         ),
                       ),
                     ),
-                    _buildSectionTitle('Warna Latar', context),
-                    _buildColorSelector(
-                      context: context,
-                      palette: AvatarConfig.backgroundPalette,
-                      selected: tempConfig.backgroundColor,
-                      onSelect: (value) {
+                    const SizedBox(height: 20),
+                    Text(
+                      'Seed',
+                      style: theme.typography.base.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colors.foreground,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: seedController,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan seed untuk avatar',
+                        hintStyle: TextStyle(
+                          color: theme.colors.mutedForeground,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: theme.colors.border),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: theme.colors.primary,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      style: TextStyle(color: theme.colors.foreground),
+                      onChanged: (value) {
                         setState(() {
-                          tempConfig = tempConfig.copyWith(
-                            backgroundColor: value,
-                          );
+                          tempConfig = tempConfig.copyWith(seed: value);
                         });
                       },
                     ),
-                    _buildSectionTitle('Warna Kulit', context),
-                    _buildColorSelector(
-                      context: context,
-                      palette: AvatarConfig.facePalette,
-                      selected: tempConfig.faceColor,
-                      onSelect: (value) {
-                        setState(() {
-                          tempConfig = tempConfig.copyWith(faceColor: value);
-                        });
-                      },
+                    const SizedBox(height: 20),
+                    Text(
+                      'Style Avatar',
+                      style: theme.typography.base.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colors.foreground,
+                      ),
                     ),
-                    _buildSectionTitle('Warna Rambut', context),
-                    _buildColorSelector(
-                      context: context,
-                      palette: AvatarConfig.hairPalette,
-                      selected: tempConfig.hairColor,
-                      onSelect: (value) {
-                        setState(() {
-                          tempConfig = tempConfig.copyWith(hairColor: value);
-                        });
-                      },
-                    ),
-                    _buildSectionTitle('Gaya Rambut', context),
-                    _buildStyleSelector<AvatarHairStyle>(
-                      context: context,
-                      options: AvatarHairStyle.values,
-                      selected: tempConfig.hairStyle,
-                      labelBuilder: _hairLabel,
-                      onSelect: (value) {
-                        setState(() {
-                          tempConfig = tempConfig.copyWith(hairStyle: value);
-                        });
-                      },
-                    ),
-                    _buildSectionTitle('Mata', context),
-                    _buildStyleSelector<AvatarEyeStyle>(
-                      context: context,
-                      options: AvatarEyeStyle.values,
-                      selected: tempConfig.eyeStyle,
-                      labelBuilder: _eyeLabel,
-                      onSelect: (value) {
-                        setState(() {
-                          tempConfig = tempConfig.copyWith(eyeStyle: value);
-                        });
-                      },
-                    ),
-                    _buildSectionTitle('Mulut', context),
-                    _buildStyleSelector<AvatarMouthStyle>(
-                      context: context,
-                      options: AvatarMouthStyle.values,
-                      selected: tempConfig.mouthStyle,
-                      labelBuilder: _mouthLabel,
-                      onSelect: (value) {
-                        setState(() {
-                          tempConfig = tempConfig.copyWith(mouthStyle: value);
-                        });
-                      },
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: DiceBearStyle.values.map((style) {
+                        final isSelected = tempConfig.style == style;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              tempConfig = tempConfig.copyWith(style: style);
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? theme.colors.primary
+                                      .withValues(alpha: 0.15)
+                                  : theme.colors.muted,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isSelected
+                                    ? theme.colors.primary
+                                    : theme.colors.border,
+                                width: isSelected ? 2 : 1,
+                              ),
+                            ),
+                            child: Text(
+                              style.displayName,
+                              style: theme.typography.sm.copyWith(
+                                color: isSelected
+                                    ? theme.colors.primary
+                                    : theme.colors.foreground,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 24),
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () {
+                              seedController.dispose();
+                              Navigator.pop(builderContext);
+                            },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: theme.colors.mutedForeground,
                               side: BorderSide(color: theme.colors.border),
@@ -453,11 +476,10 @@ class ProfileScreen extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-                              await context
-                                  .read<UserProvider>()
-                                  .updateAvatarConfig(tempConfig);
-                              if (context.mounted) {
-                                Navigator.pop(context);
+                              await userProvider.updateAvatarConfig(tempConfig);
+                              seedController.dispose();
+                              if (builderContext.mounted) {
+                                Navigator.pop(builderContext);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -477,149 +499,5 @@ class ProfileScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _buildSectionTitle(String title, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 8),
-      child: Text(
-        title,
-        style: context.theme.typography.base.copyWith(
-          fontWeight: FontWeight.w600,
-          color: context.theme.colors.foreground,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildColorSelector({
-    required BuildContext context,
-    required List<String> palette,
-    required String selected,
-    required ValueChanged<String> onSelect,
-  }) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children: [
-        for (final color in palette)
-          GestureDetector(
-            onTap: () => onSelect(color),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: _colorFromHex(color),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: color == selected
-                      ? context.theme.colors.primary
-                      : Colors.transparent,
-                  width: 3,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: color == selected
-                  ? Icon(
-                      Icons.check,
-                      color: context.theme.colors.primaryForeground,
-                      size: 20,
-                    )
-                  : null,
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildStyleSelector<T>({
-    required BuildContext context,
-    required Iterable<T> options,
-    required T selected,
-    required String Function(T) labelBuilder,
-    required ValueChanged<T> onSelect,
-  }) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children: [
-        for (final option in options)
-          ChoiceChip(
-            label: Text(
-              labelBuilder(option),
-              style: context.theme.typography.sm.copyWith(
-                color: option == selected
-                    ? context.theme.colors.primary
-                    : context.theme.colors.foreground,
-                fontWeight: option == selected
-                    ? FontWeight.w600
-                    : FontWeight.w500,
-              ),
-            ),
-            selected: option == selected,
-            onSelected: (_) => onSelect(option),
-            selectedColor: context.theme.colors.primary.withValues(alpha: 0.12),
-            backgroundColor: context.theme.colors.muted,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-              side: BorderSide(
-                color: option == selected
-                    ? context.theme.colors.primary
-                    : context.theme.colors.border,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Color _colorFromHex(String hex) {
-    final buffer = StringBuffer();
-    if (hex.length == 6 || hex.length == 7) buffer.write('ff');
-    buffer.write(hex.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
-  }
-
-  String _hairLabel(AvatarHairStyle style) {
-    switch (style) {
-      case AvatarHairStyle.none:
-        return 'Botak';
-      case AvatarHairStyle.short:
-        return 'Pendek';
-      case AvatarHairStyle.wave:
-        return 'Wavy';
-      case AvatarHairStyle.bun:
-        return 'Konde';
-      case AvatarHairStyle.buzz:
-        return 'Cepak';
-    }
-  }
-
-  String _eyeLabel(AvatarEyeStyle style) {
-    switch (style) {
-      case AvatarEyeStyle.round:
-        return 'Round';
-      case AvatarEyeStyle.happy:
-        return 'Happy';
-      case AvatarEyeStyle.wink:
-        return 'Wink';
-    }
-  }
-
-  String _mouthLabel(AvatarMouthStyle style) {
-    switch (style) {
-      case AvatarMouthStyle.smile:
-        return 'Smile';
-      case AvatarMouthStyle.grin:
-        return 'Grin';
-      case AvatarMouthStyle.surprised:
-        return 'Surprise';
-    }
   }
 }
