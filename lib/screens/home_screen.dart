@@ -22,10 +22,27 @@ class _HomeScreenState extends State<HomeScreen> {
     ProfileScreen(),
   ];
 
+  void _showAddTransactionDialog() {
+    // Navigate to transactions screen which has the add dialog
+    setState(() => _currentIndex = 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
+      floatingActionButton: _currentIndex == 0
+          ? FloatingActionButton(
+              onPressed: _showAddTransactionDialog,
+              backgroundColor: Colors.green[600],
+              child: const Icon(
+                Icons.add,
+                size: 28,
+                color: Colors.white,
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -47,19 +64,19 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
-              label: 'Dashboard',
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Beranda',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.receipt_long_outlined),
-              activeIcon: Icon(Icons.receipt_long),
-              label: 'Transaksi',
+              icon: Icon(Icons.bar_chart_outlined),
+              activeIcon: Icon(Icons.bar_chart),
+              label: 'Laporan',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.savings_outlined),
-              activeIcon: Icon(Icons.savings),
-              label: 'Tabungan',
+              icon: Icon(Icons.account_balance_wallet_outlined),
+              activeIcon: Icon(Icons.account_balance_wallet),
+              label: 'Anggaran',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),

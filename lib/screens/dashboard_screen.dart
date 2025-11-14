@@ -61,35 +61,44 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               
-              FCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Saldo Saat Ini',
-                        style: context.theme.typography.sm.copyWith(
-                          color: context.theme.colors.mutedForeground,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        currencyFormat.format(transactionProvider.totalBalance),
-                        style: context.theme.typography.xl5.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.theme.colors.foreground,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Per ${dateFormat.format(now)}',
-                        style: context.theme.typography.sm.copyWith(
-                          color: context.theme.colors.mutedForeground,
-                        ),
-                      ),
-                    ],
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: context.theme.colors.border,
+                    width: 1,
                   ),
+                ),
+                padding: const EdgeInsets.all(28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Saldo Saat Ini',
+                      style: context.theme.typography.base.copyWith(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      currencyFormat.format(transactionProvider.totalBalance),
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Per ${dateFormat.format(now)}',
+                      style: context.theme.typography.sm.copyWith(
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               
@@ -118,13 +127,13 @@ class DashboardScreen extends StatelessWidget {
                                 sections: [
                                   PieChartSectionData(
                                     value: transactionProvider.monthlyIncome,
-                                    color: context.theme.colors.foreground,
+                                    color: Colors.green[400],
                                     radius: 50,
                                     title: '',
                                   ),
                                   PieChartSectionData(
                                     value: transactionProvider.monthlyExpense,
-                                    color: context.theme.colors.mutedForeground,
+                                    color: Colors.red[400],
                                     radius: 50,
                                     title: '',
                                   ),
@@ -164,83 +173,95 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       Column(
                         children: [
-                          FCard(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: context.theme.colors.foreground,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Total Pemasukan',
-                                          style: context.theme.typography.sm.copyWith(
-                                            color: context.theme.colors.mutedForeground,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          currencyFormat.format(transactionProvider.monthlyIncome),
-                                          style: context.theme.typography.xl.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: context.theme.colors.foreground,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: context.theme.colors.border,
+                                width: 1,
                               ),
+                            ),
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[400],
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Pemasukan',
+                                        style: context.theme.typography.sm.copyWith(
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        currencyFormat.format(transactionProvider.monthlyIncome),
+                                        style: context.theme.typography.xl.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 12),
-                          FCard(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: context.theme.colors.mutedForeground,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Total Pengeluaran',
-                                          style: context.theme.typography.sm.copyWith(
-                                            color: context.theme.colors.mutedForeground,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          currencyFormat.format(transactionProvider.monthlyExpense),
-                                          style: context.theme.typography.xl.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: context.theme.colors.foreground,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: context.theme.colors.border,
+                                width: 1,
                               ),
+                            ),
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red[400],
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Total Pengeluaran',
+                                        style: context.theme.typography.sm.copyWith(
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        currencyFormat.format(transactionProvider.monthlyExpense),
+                                        style: context.theme.typography.xl.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -283,36 +304,47 @@ class DashboardScreen extends StatelessWidget {
                   
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: FCard(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: context.theme.colors.border,
+                          width: 1,
+                        ),
+                      ),
                       child: ListTile(
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 8,
+                          vertical: 12,
                         ),
                         leading: Container(
-                          width: 48,
-                          height: 48,
+                          width: 52,
+                          height: 52,
                           decoration: BoxDecoration(
-                            color: context.theme.colors.muted,
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.grey[800],
+                            shape: BoxShape.circle,
                           ),
                           child: Icon(
                             _getCategoryIcon(transaction.category),
-                            color: context.theme.colors.foreground,
-                            size: 24,
+                            color: Colors.white,
+                            size: 26,
                           ),
                         ),
                         title: Text(
                           transaction.title,
                           style: context.theme.typography.base.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: context.theme.colors.foreground,
+                            color: Colors.white,
                           ),
                         ),
-                        subtitle: Text(
-                          _getCategoryName(transaction.category),
-                          style: context.theme.typography.sm.copyWith(
-                            color: context.theme.colors.mutedForeground,
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            _getCategoryName(transaction.category),
+                            style: context.theme.typography.sm.copyWith(
+                              color: Colors.grey[400],
+                            ),
                           ),
                         ),
                         trailing: Column(
@@ -320,16 +352,17 @@ class DashboardScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '${isIncome ? '+' : '-'} $amountStr',
+                              '${isIncome ? '+ ' : '- '}$amountStr',
                               style: context.theme.typography.base.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: context.theme.colors.foreground,
+                                fontWeight: FontWeight.bold,
+                                color: isIncome ? Colors.green[400] : Colors.red[400],
                               ),
                             ),
+                            const SizedBox(height: 4),
                             Text(
                               dateStr,
                               style: context.theme.typography.xs.copyWith(
-                                color: context.theme.colors.mutedForeground,
+                                color: Colors.grey[500],
                               ),
                             ),
                           ],
